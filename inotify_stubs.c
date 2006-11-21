@@ -2,7 +2,7 @@
  *	Copyright (C) 2006 Vincent Hanquez <vincent@snarc.org>
  *
  * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published
+ * it under the terms of the GNU Lesser General Public License as published
  * by the Free Software Foundation; version 2 only.
  *
  * This program is distributed in the hope that it will be useful,
@@ -39,8 +39,6 @@ static int inotify_return_table[] = {
 	IN_MOVE_SELF, IN_MOVED_FROM, IN_MOVED_TO, IN_OPEN,
 	IN_IGNORED, IN_ISDIR, IN_Q_OVERFLOW, IN_UNMOUNT, 0
 };
-
-#define ARRAY_LEN(a) (sizeof(a) / sizeof(a[0]))
 
 value stub_inotify_init(value unit)
 {

@@ -14,26 +14,26 @@
  *)
 
 type select_event =
-	| Access
-	| Attrib
-	| Close_write
-	| Close_nowrite
-	| Create
-	| Delete
-	| Delete_self
-	| Modify
-	| Move_self
-	| Moved_from
-	| Moved_to
-	| Open
-	| Dont_follow
-	| Mask_add
-	| Oneshot
-	| Onlydir
+	| S_Access
+	| S_Attrib
+	| S_Close_write
+	| S_Close_nowrite
+	| S_Create
+	| S_Delete
+	| S_Delete_self
+	| S_Modify
+	| S_Move_self
+	| S_Moved_from
+	| S_Moved_to
+	| S_Open
+	| S_Dont_follow
+	| S_Mask_add
+	| S_Oneshot
+	| S_Onlydir
 	(* convenience *)
-	| Move
-	| Close
-	| All
+	| S_Move
+	| S_Close
+	| S_All
 
 type type_event =
 	| Access
@@ -90,10 +90,9 @@ let read fd =
 
 	let ret = ref [] in
 	let buf = String.make toread '\000' in
-	let rd = Unix.read fd buf 0 toread in
+	let toread = Unix.read fd buf 0 toread in
 
 	let i = ref 0 in
-
 
 	while !i < toread
 	do

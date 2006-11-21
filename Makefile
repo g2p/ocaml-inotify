@@ -8,7 +8,7 @@ OCAMLOPTFLAGS =
 OCAML_TEST_INC = -I `ocamlfind query oUnit`
 OCAML_TEST_LIB = `ocamlfind query oUnit`/oUnit.cmxa
 
-LIBS = inotify.cmxa inotify.cma
+LIBS = inotify.cmi inotify.cmxa inotify.cma
 PROGRAMS = test.inotify
 
 all: $(LIBS) $(PROGRAMS)

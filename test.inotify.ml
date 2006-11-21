@@ -9,7 +9,7 @@ let _ =
 	);
 
 	let fd = Inotify.init () in
-	let wd = Inotify.add_watch fd Sys.argv.(1) [ Inotify.All ] in
+	ignore (Inotify.add_watch fd Sys.argv.(1) [ Inotify.S_Create ]);
 
 	let string_of_event ev =
 		let wd,mask,cookie,s = ev in
