@@ -15,7 +15,8 @@ let _ =
 		let wd,mask,cookie,s = ev in
 		let mask = String.concat ":" (List.map Inotify.string_of_event mask) in
 		let s = match s with Some s -> s | None -> "\"\"" in
-		sprintf "wd [%u] mask[%s] cookie[%ld] %s" wd mask cookie s
+		sprintf "wd [%u] mask[%s] cookie[%ld] %s" (Inotify.int_of_wd wd)
+		                                          mask cookie s
 		in
 
 	let nb = ref 0 in

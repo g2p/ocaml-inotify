@@ -71,6 +71,8 @@ let string_of_event = function
 	| Q_overflow -> "Q_OVERFLOW"
 	| Unmount -> "UNMOUNT"
 
+let int_of_wd wd = wd
+
 type wd = int
 type event = wd * type_event list * int32 * string option
 

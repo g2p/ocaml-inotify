@@ -52,10 +52,11 @@ type type_event =
 | Q_overflow
 | Unmount
 
-val string_of_event : type_event -> string
-
-type wd = int
+type wd
 type event = wd * type_event list * int32 * string option
+
+val int_of_wd : wd -> int
+val string_of_event : type_event -> string
 
 val init : unit -> Unix.file_descr
 val add_watch : Unix.file_descr -> string -> select_event list -> wd
