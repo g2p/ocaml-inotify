@@ -80,7 +80,7 @@ external init : unit -> Unix.file_descr = "stub_inotify_init"
 external add_watch : Unix.file_descr -> string -> select_event list -> wd
                    = "stub_inotify_add_watch"
 external rm_watch : Unix.file_descr -> wd -> unit = "stub_inotify_rm_watch"
-external convert : string -> (int * type_event list * int32 * int)
+external convert : string -> (wd * type_event list * int32 * int)
                  = "stub_inotify_convert"
 external struct_size : unit -> int = "stub_inotify_struct_size"
 
