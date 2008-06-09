@@ -1,5 +1,3 @@
-CC = gcc
-CFLAGS = -Wall -fPIC -O2
 OCAMLC = ocamlc
 OCAMLOPT = ocamlopt
 
@@ -15,7 +13,13 @@ OCAML_TEST_LIB = `ocamlfind query oUnit`/oUnit.cmxa
 LIBS = inotify.cmi inotify.cmxa inotify.cma
 PROGRAMS = test.inotify
 
+PKG_NAME = inotify
+
 all: $(LIBS)
+
+all-byte: inotify.cmi inotify.cma
+
+all-opt: inotify.cmi inotify.cmxa inotify.cma
 
 bins: $(PROGRAMS)
 
@@ -44,14 +48,22 @@ libinotify_stubs.a: inotify_stubs.o
 	$(OCAMLOPT) $(OCAMLOPTFLAGS) -c -o $@ $<
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(OCAMLC) -c -o $@ $<
+
+OCAMLFIND_INSTALL_FLAGS ?= -destdir $(OCAMLDESTDIR) -ldconf ignore
 
 .PHONY: install
 install: $(LIBS)
-	ocamlfind install -destdir $(OCAMLDESTDIR) -ldconf ignore inotify META inotify.cmi inotify.mli inotify.cma inotify.cmxa *.a *.so *.cmx
+	ocamlfind install $(OCAMLFIND_INSTALL_FLAGS) $(PKG_NAME) META inotify.cmi inotify.mli inotify.cma inotify.cmxa *.a *.so *.cmx
+
+install-byte:
+	ocamlfind install $(OCAMLFIND_INSTALL_FLAGS) $(PKG_NAME) META inotify.cmi inotify.mli inotify.cma *.a *.so
+
+install-opt:
+	ocamlfind install $(OCAMLFIND_INSTALL_FLAGS) $(PKG_NAME) META inotify.cmi inotify.mli inotify.cma inotify.cmxa *.a *.so *.cmx
 
 uninstall:
-	ocamlfind remove -destdir $(OCAMLDESTDIR) sqlite3
+	ocamlfind remove $(OCAMLFIND_INSTALL_FLAGS) $(PKG_NAME)
 
 test.inotify: inotify.cmxa test.inotify.ml
 	$(OCAMLOPT) -o $@ unix.cmxa $+
