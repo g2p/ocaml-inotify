@@ -97,10 +97,16 @@ let read fd =
 
 	let i = ref 0 in
 
+	let read_c_string offset len =
+		let index = ref offset in
+		while !index < len && buf.[!index] <> '\000' do incr index done;
+		String.sub buf offset (!index - offset)
+		in
+
 	while !i < toread
 	do
 		let wd, l, cookie, len = convert (String.sub buf !i ss) in
-		let s = if len > 0 then Some (String.sub buf (!i + ss) len) else None in
+		let s = if len > 0 then Some (read_c_string (!i + ss) len) else None in
 		ret := (wd, l, cookie, s) :: !ret;
 		i := !i + (ss + len);
 	done;
