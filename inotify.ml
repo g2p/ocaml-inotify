@@ -95,13 +95,13 @@ let read fd =
 	let buf = String.make toread '\000' in
 	let toread = Unix.read fd buf 0 toread in
 
-	let i = ref 0 in
-
 	let read_c_string offset len =
-		let index = ref offset in
-		while !index < len && buf.[!index] <> '\000' do incr index done;
-		String.sub buf offset (!index - offset)
+		let index = ref 0 in
+		while !index < len && buf.[offset + !index] <> '\000' do incr index done;
+		String.sub buf offset !index
 		in
+
+	let i = ref 0 in
 
 	while !i < toread
 	do
