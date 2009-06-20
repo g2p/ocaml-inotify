@@ -14,6 +14,7 @@
  * Inotify Ocaml binding - C glue
  */
 
+#include <errno.h>
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -24,6 +25,7 @@
 #include <caml/custom.h>
 #include <caml/fail.h>
 #include <caml/signals.h>
+#include <caml/callback.h>
 
 #include <features.h>
 
@@ -54,6 +56,19 @@ static int inotify_return_table[] = {
 	IN_IGNORED, IN_ISDIR, IN_Q_OVERFLOW, IN_UNMOUNT, 0
 };
 
+static void raise_inotify_error(char const *msg)
+{
+	static value *inotify_err = NULL;
+	value args[2];
+
+	if (!inotify_err)
+		inotify_err = caml_named_value("inotify.error");
+	args[0] = caml_copy_string(msg);
+	args[1] = Val_int(errno);
+
+	caml_raise_with_args(*inotify_err, 2, args);
+}
+
 value stub_inotify_init(value unit)
 {
 	CAMLparam1(unit);
@@ -70,7 +85,7 @@ value stub_inotify_ioctl_fionread(value fd)
 
 	rc = ioctl(Int_val(fd), FIONREAD, &bytes);
 	if (rc == -1)
-		caml_failwith("ioctl fionread");
+		raise_inotify_error("ioctl fionread");
 
 	CAMLreturn(Val_int(bytes));
 }
@@ -83,7 +98,7 @@ value stub_inotify_add_watch(value fd, value path, value mask)
 	cv_mask = caml_convert_flag_list(mask, inotify_flag_table);
 	wd = inotify_add_watch(Int_val(fd), String_val(path), cv_mask);
 	if (wd < 0)
-		caml_failwith("inotify_add_watch");
+		raise_inotify_error("add_watch");
 	CAMLreturn(Val_int(wd));
 }
 
@@ -94,7 +109,7 @@ value stub_inotify_rm_watch(value fd, value wd)
 
 	ret = inotify_rm_watch(Int_val(fd), Int_val(wd));
 	if (ret == -1)
-		caml_failwith("inotify_rm_watch");
+		raise_inotify_error("rm_watch");
 	CAMLreturn(Val_unit);
 }
 
